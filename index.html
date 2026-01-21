@@ -1,42 +1,12 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="vi...
-
-2m 42s
-J
-JAVIER FERNANDEZ
-
-Done
-It's not working this is the output from executing code Page not found Looks like you’ve followed a ...
-
-2m 24s
-J
-JAVIER FERNANDEZ
-
-Done
-Show me the full code
-
-1m 56s
-J
-JAVIER FERNANDEZ
-
-Prompt
-Show me the full code
-
-
-Claude Agent took 1m 56s
-Result
-The XRanker Pro application is a single-file HTML application located at index.html. Below is the complete source code:
-
-Full Code (index.html)
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <title>XRanker | Pro Algorithm Editor</title>
     <meta name="description" content="Write, grade, and optimize your X posts for maximum virality.">
-    <meta property="og:title" content="XRanker Pro">
-    <meta property="og:description" content="Stop guessing. Grade your post against the X algorithm.">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 
     <style>
         :root {
@@ -44,21 +14,18 @@ Full Code (index.html)
             --bg-panel: #16181c;
             --border: #2f3336;
             --primary: #1d9bf0;
-            --success: #00ba7c;
-            --danger: #f91880;
             --text-main: #e7e9ea;
             --text-muted: #71767b;
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background-color: var(--bg-app);
-            color: var(--text-main);
+        
+        body { 
+            background-color: var(--bg-app); 
+            color: var(--text-main); 
             font-family: var(--font-stack);
-            margin: 0;
-            padding: 0;
+            margin: 0; 
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -67,55 +34,42 @@ Full Code (index.html)
         /* --- LAYOUT --- */
         .app-container {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 0;
+            grid-template-columns: 1fr 400px; /* Desktop: Side by Side */
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
             height: 100vh;
         }
 
-        /* MOBILE RESPONSIVE */
+        /* MOBILE FIX: Stack them instead of hiding preview */
         @media (max-width: 900px) {
-            .app-container { grid-template-columns: 1fr; height: auto; }
-            .preview-pane { display: none; } /* Hidden on mobile by default, maybe toggle later */
-            .preview-pane.active { display: flex; position: fixed; inset: 0; z-index: 99; }
+            .app-container { grid-template-columns: 1fr; height: auto; display: block; }
+            .editor-pane { height: auto; min-height: 80vh; border-right: none; border-bottom: 1px solid var(--border); }
+            .preview-pane { padding: 40px 20px; }
         }
 
-        /* --- LEFT PANEL: EDITOR --- */
+        /* --- EDITOR PANE --- */
         .editor-pane {
-            padding: 40px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border);
             overflow-y: auto;
         }
 
-        .brand {
-            font-size: 24px;
-            font-weight: 900;
-            margin-bottom: 30px;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .brand span { color: var(--text-muted); font-size: 12px; font-weight: normal; background: #2f3336; padding: 2px 8px; border-radius: 12px; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .brand { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+        .brand span { color: var(--text-muted); font-size: 10px; background: #2f3336; padding: 2px 6px; border-radius: 4px; vertical-align: middle; }
 
-        .input-area {
-            position: relative;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
+        .input-area { flex-grow: 1; display: flex; flex-direction: column; position: relative; }
+        
         textarea {
             width: 100%;
             min-height: 200px;
             background: transparent;
             border: none;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1.5;
             resize: none;
             font-family: inherit;
@@ -123,12 +77,14 @@ Full Code (index.html)
         textarea::placeholder { color: #333; }
 
         .toolbar {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding-bottom: 20px;
+            border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            margin-top: 10px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: relative;
         }
 
         .icon-btn {
@@ -136,199 +92,272 @@ Full Code (index.html)
             border: none;
             color: var(--primary);
             cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background 0.2s;
+            padding: 5px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            opacity: 0.8;
+            transition: 0.2s;
         }
-        .icon-btn:hover { background: rgba(29, 155, 240, 0.1); }
-        .icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        .icon-btn:hover { opacity: 1; }
+        .icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        
+        .char-count { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+        .char-count.warn { color: #ffd400; }
+        .char-count.danger { color: #f91880; }
 
-        .char-count {
-            margin-left: auto;
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .char-count.warning { color: #ffd400; }
-        .char-count.danger { color: var(--danger); }
+        /* --- ANALYSIS BOX --- */
+        .analysis-box { margin-top: 25px; background: var(--bg-panel); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
 
-        /* --- ANALYSIS DASHBOARD --- */
-        .analysis-box {
-            margin-top: 30px;
-            background: var(--bg-panel);
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid var(--border);
-        }
+        .score-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .score-val { font-size: 28px; font-weight: 800; color: var(--text-main); }
+        
+        .progress-track { width: 100%; height: 6px; background: #2f3336; border-radius: 3px; overflow: hidden; margin-bottom: 15px; }
+        .progress-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.5s, background 0.3s; }
 
-        .score-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 15px;
-        }
+        .feedback-list { display: grid; gap: 8px; }
+        .feedback-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); padding: 6px; border-radius: 6px; }
+        .feedback-item.active { background: rgba(255,255,255,0.05); color: #fff; }
 
-        .score-title { font-size: 13px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; }
-        .score-number { font-size: 32px; font-weight: 800; line-height: 1; color: var(--text-main); }
-
-        .progress-track {
-            width: 100%;
-            height: 6px;
-            background: #2f3336;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--primary);
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
-        }
-
-        .feedback-grid {
-            display: grid;
-            gap: 12px;
-        }
-
-        .feedback-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            color: var(--text-muted);
-            padding: 8px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .feedback-item.active { background: rgba(255,255,255,0.03); color: var(--text-main); }
-        .feedback-icon { width: 18px; text-align: center; font-size: 16px; }
-
-        /* --- MONETIZATION BUTTON --- */
+        /* --- CTA BUTTON (Affiliate) --- */
         .schedule-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            margin-top: 24px;
-            padding: 14px;
-            background: var(--text-main);
-            color: #000;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.1s, opacity 0.2s;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            width: 100%; margin-top: 20px; padding: 12px;
+            background: #fff; color: #000;
+            border-radius: 30px; font-weight: 700; font-size: 14px;
+            text-decoration: none; transition: transform 0.1s;
         }
-        .schedule-btn:hover { opacity: 0.9; transform: scale(0.99); }
-        .schedule-btn svg { width: 18px; height: 18px; }
+        .schedule-btn:hover { transform: scale(0.99); opacity: 0.9; }
 
-        /* --- RIGHT PANEL: PREVIEW --- */
-        .preview-pane {
-            background: #000;
-            border-left: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        /* --- PREVIEW PANE --- */
+        .preview-pane { background: #000; border-left: 1px solid var(--border); display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .phone-mockup { width: 100%; max-width: 360px; border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+        
+        .tweet-header { display: flex; gap: 10px; margin-bottom: 8px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; }
+        .user-meta { line-height: 1.2; font-size: 14px; }
+        .name-row { display: flex; align-items: center; gap: 4px; font-weight: 700; color: #fff; }
+        .handle { color: var(--text-muted); font-weight: 400; }
+        
+        .tweet-body { font-size: 15px; line-height: 1.5; white-space: pre-wrap; color: #fff; }
+        .media-preview { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); display: none; }
+        .media-preview img, .media-preview video { width: 100%; display: block; }
+        
+        .tweet-footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 12px; }
 
-        .phone-mockup {
-            width: 100%;
-            max-width: 380px;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
-            background: #000;
-        }
-
-        /* Tweet Components */
-        .tweet-header { display: flex; gap: 12px; margin-bottom: 4px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; overflow: hidden; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .user-meta { display: flex; flex-direction: column; justify-content: center; line-height: 1.2; }
-        .name-line { display: flex; align-items: center; gap: 4px; }
-        .user-name { font-weight: 700; font-size: 15px; color: #fff; }
-        .verified-badge { width: 18px; height: 18px; color: var(--primary); display: none; }
-        .user-handle { color: var(--text-muted); font-size: 15px; }
-
-        .tweet-body {
-            font-size: 17px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            margin-top: 4px;
-            color: #fff;
-        }
-
-        .media-container {
-            margin-top: 12px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            display: none;
-            position: relative;
-        }
-        .media-container img, .media-container video { width: 100%; display: block; }
-
-        .tweet-footer {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        /* File Input Hidden */
+        /* UTILS */
         input[type="file"] { display: none; }
-
+        
         /* Font Menu */
-        .font-menu {
-            position: absolute;
-            bottom: 60px;
-            left: 20px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 8px;
-            display: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        .font-menu.show { display: grid; gap: 5px; }
-        .font-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
-            padding: 8px 16px;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        .font-btn:hover { background: rgba(255,255,255,0.1); }
-
+        .font-menu { position: absolute; bottom: 60px; left: 10px; background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 5px; display: none; z-index: 10; box-shadow: 0 4px 12px rgba(255,255,255,0.1); }
+        .font-menu.show { display: grid; }
+        .font-btn { background: none; border: none; color: #fff; padding: 8px 12px; text-align: left; cursor: pointer; font-size: 13px; width: 100px;}
+        .font-btn:hover { background: #2f3336; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-
+    
     <div class="editor-pane">
-        <div class="brand">
-            XRanker
-            <span>PRO</span>
+        <div class="header-row">
+            <div class="brand">XRanker <span>PRO</span></div>
         </div>
 
         <div class="input-area">
-            <textarea id="editor" placeholder="What is happening?!"></textarea>
-
+            <textarea id="editor" placeholder="What is happening?! (Type here)"></textarea>
+            
             <div class="font-menu" id="fontMenu">
-                <button class="font-btn" onclick="applyFont('bold')">𝐁old Text</button>
+                <button class="font-btn" onclick="applyFont('bold')">𝐁old</button>
+                <button class="font-btn" onclick="applyFont('italic')">𝐼talic</button>
+                <button class="font-btn" onclick="applyFont('mono')">𝙼𝚘𝚗𝚘</button>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="icon-btn" onclick="document.getElementById('fileUpload').click()" title="Add Media">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H5v-3l3-4 3 3 3-4 5 6zm0-5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"></path></svg>
+            </button>
+            <input type="file" id="fileUpload" accept="image/*,video/*">
+
+            <button class="icon-btn" onclick="toggleFonts()" title="Format Text">
+                <svg viewBox="0 0 24 24"><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"></path></svg>
+            </button>
+
+            <label class="icon-btn" title="Toggle Blue Check" style="cursor:pointer">
+                <input type="checkbox" id="checkPremium" style="display:none">
+                <svg id="premiumIcon" viewBox="0 0 24 24"><path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.02-3.01-1.06-4.12-1.1-1.1-2.73-1.53-4.12-1.06C14.17 2.13 12.93 1.25 11.5 1.25c-1.43 0-2.67.88-3.34 2.19-1.39-.46-3.01-.02-4.12 1.06-1.1 1.1-1.53 2.73-1.06 4.12C1.63 9.33.75 10.57.75 12c0 1.43.88 2.67 2.19 3.34-.46 1.39-.02 3.01 1.06 4.12 1.1 1.1 2.73 1.53 4.12 1.06 1.33 1.31 2.57 2.19 4 2.19 1.43 0 2.67-.88 3.34-2.19 1.39.46 3.01.02 4.12-1.06 1.1-1.1 1.53-2.73 1.06-4.12 1.31-1.33 2.19-2.57 2.19-4zm-11.25 6.75L6.5 14.25l1.06-1.06 2.44 2.44 5.94-5.94 1.06 1.06-7 7z"></path></svg>
+            </label>
+
+            <div class="char-count" id="charCount">0/280</div>
+        </div>
+
+        <div class="analysis-box">
+            <div class="score-row">
+                <span style="font-size:12px; font-weight:700; color:#71767b; letter-spacing:1px;">VIRAL SCORE</span>
+                <span class="score-val" id="scoreVal">0</span>
+            </div>
+            
+            <div class="progress-track"><div class="progress-fill" id="scoreBar"></div></div>
+
+            <div class="feedback-list" id="feedbackArea">
+                <div class="feedback-item">Start typing...</div>
+            </div>
+
+            <a href="https://tweethunter.io/?via=javier-fernandez" target="_blank" class="schedule-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12zm10 6c3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6 2.69 6 6 6z"/></svg>
+                Schedule with TweetHunter
+            </a>
+        </div>
+    </div>
+
+    <div class="preview-pane">
+        <div class="phone-mockup">
+            <div class="tweet-header">
+                <div class="avatar"><img src="https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"></div>
+                <div class="user-meta">
+                    <div class="name-row">
+                        <span>You</span>
+                        <svg class="verified-badge" id="previewBadge" style="width:16px;height:16px;color:#1d9bf0;display:none;margin-left:4px" viewBox="0 0 24 24"><path fill="currentColor" d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.02-3.01-1.06-4.12-1.1-1.1-2.73-1.53-4.12-1.06C14.17 2.13 12.93 1.25 11.5 1.25c-1.43 0-2.67.88-3.34 2.19-1.39-.46-3.01-.02-4.12 1.06-1.1 1.1-1.53 2.73-1.06 4.12C1.63 9.33.75 10.57.75 12c0 1.43.88 2.67 2.19 3.34-.46 1.39-.02 3.01 1.06 4.12 1.1 1.1 2.73 1.53 4.12 1.06 1.33 1.31 2.57 2.19 4 2.19 1.43 0 2.67-.88 3.34-2.19 1.39.46 3.01.02 4.12-1.06 1.1-1.1 1.53-2.73 1.06-4.12 1.31-1.33 2.19-2.57 2.19-4zm-11.25 6.75L6.5 14.25l1.06-1.06 2.44 2.44 5.94-5.94 1.06 1.06-7 7z"></path></svg>
+                    </div>
+                    <div class="handle">@username</div>
+                </div>
+            </div>
+            <div class="tweet-body" id="previewText"></div>
+            <div class="media-preview" id="mediaPreview"></div>
+            <div class="tweet-footer" id="dateDisplay"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // VARS
+    const editor = document.getElementById('editor');
+    const previewText = document.getElementById('previewText');
+    const mediaPreview = document.getElementById('mediaPreview');
+    const charCount = document.getElementById('charCount');
+    const scoreVal = document.getElementById('scoreVal');
+    const scoreBar = document.getElementById('scoreBar');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const fontMenu = document.getElementById('fontMenu');
+    
+    // STATE
+    let hasMedia = false;
+    let isVideo = false;
+    let isPremium = false;
+
+    // INIT
+    document.getElementById('dateDisplay').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + " · " + new Date().toLocaleDateString();
+
+    // EVENTS
+    editor.addEventListener('input', update);
+    document.getElementById('checkPremium').addEventListener('change', (e) => {
+        isPremium = e.target.checked;
+        document.getElementById('previewBadge').style.display = isPremium ? 'block' : 'none';
+        document.getElementById('premiumIcon').style.fill = isPremium ? '#1d9bf0' : 'currentColor';
+        update();
+    });
+
+    // CLICK OUTSIDE TO CLOSE FONT MENU
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.font-menu') && !e.target.closest('button[onclick="toggleFonts()"]')) {
+            fontMenu.classList.remove('show');
+        }
+    });
+
+    // MEDIA UPLOAD
+    document.getElementById('fileUpload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        hasMedia = true;
+        isVideo = file.type.startsWith('video');
+        
+        mediaPreview.style.display = 'block';
+        mediaPreview.innerHTML = ''; // Clean previous
+        
+        const url = URL.createObjectURL(file);
+        const el = isVideo ? document.createElement('video') : document.createElement('img');
+        el.src = url;
+        if(isVideo) el.controls = true;
+        mediaPreview.appendChild(el);
+        
+        update();
+    });
+
+    // CORE LOGIC
+    function update() {
+        const text = editor.value;
+        previewText.innerText = text;
+        
+        // Count
+        const len = text.length;
+        charCount.innerText = `${len}/280`;
+        charCount.className = `char-count ${len > 260 ? (len > 280 ? 'danger' : 'warn') : ''}`;
+
+        // Score
+        let score = 50;
+        let tips = [];
+
+        if (text.length < 5 && !hasMedia) { score -= 20; }
+        if (text.includes('http')) { score *= 0.1; tips.push({t:"Link Detected (-90%)", c:"#f91880"}); }
+        if (hasMedia) {
+            if (isVideo) { score += 40; tips.push({t:"Video Boost (+4.5x)", c:"#00ba7c"}); }
+            else { score += 15; tips.push({t:"Image Boost (+2.0x)", c:"#00ba7c"}); }
+        }
+        if (isPremium) { score *= 1.2; tips.push({t:"Verified Boost", c:"#1d9bf0"}); }
+        if (/[𝐚-𝐳]/.test(text)) { score += 10; tips.push({t:"Rich Text (+Impact)", c:"#e7e9ea"}); }
+
+        // Render
+        const final = Math.min(Math.round(score), 100);
+        scoreVal.innerText = final;
+        scoreBar.style.width = `${final}%`;
+        
+        // Color Bar
+        let color = "#00ba7c";
+        if (final < 40) color = "#f91880";
+        else if (final < 70) color = "#ffd400";
+        scoreBar.style.backgroundColor = color;
+
+        // Tips
+        feedbackArea.innerHTML = tips.map(t => 
+            `<div class="feedback-item active"><span style="color:${t.c}">●</span> ${t.t}</div>`
+        ).join('') || `<div class="feedback-item">Drafting...</div>`;
+    }
+
+    // FONTS (NOW FUNCTIONAL)
+    function toggleFonts() { fontMenu.classList.toggle('show'); }
+    
+    function applyFont(type) {
+        // FULL MAP RESTORED FOR FUNCTIONALITY
+        const maps = {
+            bold: {"a":"𝐚","b":"𝐛","c":"𝐜","d":"𝐝","e":"𝐞","f":"𝐟","g":"𝐠","h":"𝐡","i":"𝐢","j":"𝐣","k":"𝐤","l":"𝐥","m":"𝐦","n":"𝐧","o":"𝐨","p":"𝐩","q":"𝐪","r":"𝐫","s":"𝐬","t":"𝐭","u":"𝐮","v":"𝐯","w":"𝐰","x":"𝐱","y":"𝐲","z":"𝐳","A":"𝐀","B":"𝐁","C":"𝐂","D":"𝐃","E":"𝐄","F":"𝐅","G":"𝐆","H":"𝐇","I":"𝐈","J":"𝐉","K":"𝐊","L":"𝐋","M":"𝐌","N":"𝐍","O":"𝐎","P":"𝐏","Q":"𝐐","R":"𝐑","S":"𝐒","T":"𝐓","U":"𝐔","V":"𝐕","W":"𝐖","X":"𝐗","Y":"𝐘","Z":"𝐙"},
+            italic: {"a":"𝑎","b":"𝑏","c":"𝑐","d":"𝑑","e":"𝑒","f":"𝑓","g":"𝑔","h":"ℎ","i":"𝑖","j":"𝑗","k":"𝑘","l":"𝑙","m":"𝑚","n":"𝑛","o":"𝑜","p":"𝑝","q":"𝑞","r":"𝑟","s":"𝑠","t":"𝑡","u":"𝑢","v":"𝑣","w":"𝑤","x":"𝑥","y":"𝑦","z":"𝑧","A":"𝐴","B":"𝐵","C":"𝐶","D":"𝐷","E":"𝐸","F":"𝐹","G":"𝐺","H":"𝐻","I":"𝐼","J":"𝐽","K":"𝐾","L":"𝐿","M":"𝑀","N":"𝑁","O":"𝑂","P":"𝑃","Q":"𝑄","R":"𝑅","S":"𝑆","T":"𝑇","U":"𝑈","V":"𝑉","W":"𝑊","X":"𝑋","Y":"𝑌","Z":"𝑍"},
+            mono: {"a":"𝚊","b":"𝚋","c":"𝚌","d":"𝚍","e":"𝚎","f":"𝚏","g":"𝚐","h":"𝚑","i":"𝚒","j":"𝚓","k":"𝚔","l":"𝚕","m":"𝚖","n":"𝚗","o":"𝚘","p":"𝚙","q":"𝚚","r":"𝚛","s":"𝚜","t":"𝚝","u":"𝚞","v":"𝚟","w":"𝚠","x":"𝚡","y":"𝚢","z":"𝚣","A":"𝙰","B":"𝙱","C":"𝙲","D":"𝙳","E":"𝙴","F":"𝙵","G":"𝙶","H":"𝙷","I":"𝙸","J":"𝙹","K":"𝙺","L":"𝙻","M":"𝙼","N":"𝙽","O":"𝙾","P":"𝙿","Q":"𝚀","R":"𝚁","S":"𝚂","T":"𝚃","U":"𝚄","V":"𝚅","W":"𝚆","X":"𝚇","Y":"𝚈","Z":"𝚉"}
+        };
+
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        const text = editor.value;
+        const selected = text.substring(start, end);
+        
+        if (!selected) {
+            alert("Please select text to format first!");
+            return;
+        }
+
+        const map = maps[type];
+        const converted = selected.split('').map(char => map[char] || char).join('');
+        
+        editor.value = text.substring(0, start) + converted + text.substring(end);
+        update(); // Refresh preview
+        fontMenu.classList.remove('show');
+    }
+</script>
+
+</body>
+</html>
+Text</button>
                 <button class="font-btn" onclick="applyFont('italic')">𝐼talic Text</button>
                 <button class="font-btn" onclick="applyFont('mono')">𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎</button>
             </div>

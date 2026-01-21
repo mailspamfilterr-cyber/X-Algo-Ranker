@@ -1,0 +1,604 @@
+Search Netlify…
+Ctrl
+K
+
+J
+JAVIER FERNANDEZmailspamfilterr@gmail.com
+
+Projects
+xranker.website
+Switch projects
+Project navigation
+Agent runs
+Runner details
+Update HTML and CSS for XRanker Pro Algorithm Editor
+Done
+Today at 12:40 AM
+by
+JJAVIER FERNANDEZ
+JAVIER FERNANDEZ
+Based on
+main
+@
+2c5c36c
+
+Open preview
+Create pull request
+Create follow-up
+Archive task
+Fancy a game?
+This agent run is done, but hey, you can still play if you want to!
+
+Play game
+Runs
+Logs
+Diff
+3 runs
+
+View latest
+Done
+Update code to <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="vi...
+
+2m 42s
+J
+JAVIER FERNANDEZ
+
+Done
+It's not working this is the output from executing code Page not found Looks like you’ve followed a ...
+
+2m 24s
+J
+JAVIER FERNANDEZ
+
+Done
+Show me the full code
+
+1m 56s
+J
+JAVIER FERNANDEZ
+
+Prompt
+Show me the full code
+
+
+Claude Agent took 1m 56s
+Result
+The XRanker Pro application is a single-file HTML application located at index.html. Below is the complete source code:
+
+Full Code (index.html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>XRanker | Pro Algorithm Editor</title>
+    <meta name="description" content="Write, grade, and optimize your X posts for maximum virality.">
+    <meta property="og:title" content="XRanker Pro">
+    <meta property="og:description" content="Stop guessing. Grade your post against the X algorithm.">
+
+    <style>
+        :root {
+            --bg-app: #000000;
+            --bg-panel: #16181c;
+            --border: #2f3336;
+            --primary: #1d9bf0;
+            --success: #00ba7c;
+            --danger: #f91880;
+            --text-main: #e7e9ea;
+            --text-muted: #71767b;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; height: auto; }
+            .preview-pane { display: none; } /* Hidden on mobile by default, maybe toggle later */
+            .preview-pane.active { display: flex; position: fixed; inset: 0; z-index: 99; }
+        }
+
+        /* --- LEFT PANEL: EDITOR --- */
+        .editor-pane {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand span { color: var(--text-muted); font-size: 12px; font-weight: normal; background: #2f3336; padding: 2px 8px; border-radius: 12px; }
+
+        .input-area {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            line-height: 1.5;
+            resize: none;
+            font-family: inherit;
+        }
+        textarea::placeholder { color: #333; }
+
+        .toolbar {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:hover { background: rgba(29, 155, 240, 0.1); }
+        .icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .char-count {
+            margin-left: auto;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .char-count.warning { color: #ffd400; }
+        .char-count.danger { color: var(--danger); }
+
+        /* --- ANALYSIS DASHBOARD --- */
+        .analysis-box {
+            margin-top: 30px;
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .score-title { font-size: 13px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; }
+        .score-number { font-size: 32px; font-weight: 800; line-height: 1; color: var(--text-main); }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #2f3336;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+        }
+
+        .feedback-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .feedback-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .feedback-item.active { background: rgba(255,255,255,0.03); color: var(--text-main); }
+        .feedback-icon { width: 18px; text-align: center; font-size: 16px; }
+
+        /* --- MONETIZATION BUTTON --- */
+        .schedule-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: var(--text-main);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .schedule-btn:hover { opacity: 0.9; transform: scale(0.99); }
+        .schedule-btn svg { width: 18px; height: 18px; }
+
+        /* --- RIGHT PANEL: PREVIEW --- */
+        .preview-pane {
+            background: #000;
+            border-left: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-mockup {
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            background: #000;
+        }
+
+        /* Tweet Components */
+        .tweet-header { display: flex; gap: 12px; margin-bottom: 4px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .user-meta { display: flex; flex-direction: column; justify-content: center; line-height: 1.2; }
+        .name-line { display: flex; align-items: center; gap: 4px; }
+        .user-name { font-weight: 700; font-size: 15px; color: #fff; }
+        .verified-badge { width: 18px; height: 18px; color: var(--primary); display: none; }
+        .user-handle { color: var(--text-muted); font-size: 15px; }
+
+        .tweet-body {
+            font-size: 17px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            margin-top: 4px;
+            color: #fff;
+        }
+
+        .media-container {
+            margin-top: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: none;
+            position: relative;
+        }
+        .media-container img, .media-container video { width: 100%; display: block; }
+
+        .tweet-footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* File Input Hidden */
+        input[type="file"] { display: none; }
+
+        /* Font Menu */
+        .font-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            display: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .font-menu.show { display: grid; gap: 5px; }
+        .font-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        .font-btn:hover { background: rgba(255,255,255,0.1); }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="editor-pane">
+        <div class="brand">
+            XRanker
+            <span>PRO</span>
+        </div>
+
+        <div class="input-area">
+            <textarea id="editor" placeholder="What is happening?!"></textarea>
+
+            <div class="font-menu" id="fontMenu">
+                <button class="font-btn" onclick="applyFont('bold')">𝐁old Text</button>
+                <button class="font-btn" onclick="applyFont('italic')">𝐼talic Text</button>
+                <button class="font-btn" onclick="applyFont('mono')">𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎</button>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="icon-btn" onclick="document.getElementById('fileUpload').click()" title="Add Media">
+                <svg viewBox="0 0 24 24"><path d="M3 5.5C3 4.119 4.119 3 5.5 3h13C19.881 3 21 4.119 21 5.5v13c0 1.381-1.119 2.5-2.5 2.5h-13C4.119 21 3 19.881 3 18.5v-13zM5.5 5c-.276 0-.5.224-.5.5v9.086l3-3 3 3 5-5 3 3V5.5c0-.276-.224-.5-.5-.5h-13zM19 15.414l-3-3-5 5-3-3-3 3V18.5c0 .276.224.5.5.5h13c.276 0 .5-.224.5-.5v-3.086zM9.75 7C8.784 7 8 7.784 8 8.75s.784 1.75 1.75 1.75 1.75-.784 1.75-1.75S10.716 7 9.75 7z"></path></svg>
+            </button>
+            <input type="file" id="fileUpload" accept="image/*,video/*">
+
+            <button class="icon-btn" onclick="toggleFonts()" title="Format Text">
+                <svg viewBox="0 0 24 24"><path d="M18.5 4h-13C4.67 4 4 4.67 4 5.5c0 .83.67 1.5 1.5 1.5H8v11.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V7h2.5v11.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V7h2.5c.83 0 1.5-.67 1.5-1.5S19.33 4 18.5 4z"></path></svg>
+            </button>
+
+            <label class="icon-btn" title="Blue Verified">
+                <input type="checkbox" id="checkPremium" style="display:none" onchange="update()">
+                <svg id="premiumIcon" viewBox="0 0 24 24"><path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.02-3.01-1.06-4.12-1.1-1.1-2.73-1.53-4.12-1.06C14.17 2.13 12.93 1.25 11.5 1.25c-1.43 0-2.67.88-3.34 2.19-1.39-.46-3.01-.02-4.12 1.06-1.1 1.1-1.53 2.73-1.06 4.12C1.63 9.33.75 10.57.75 12c0 1.43.88 2.67 2.19 3.34-.46 1.39-.02 3.01 1.06 4.12 1.1 1.1 2.73 1.53 4.12 1.06 1.33 1.31 2.57 2.19 4 2.19 1.43 0 2.67-.88 3.34-2.19 1.39.46 3.01.02 4.12-1.06 1.1-1.1 1.53-2.73 1.06-4.12 1.31-1.33 2.19-2.57 2.19-4zm-11.25 6.75L6.5 14.25l1.06-1.06 2.44 2.44 5.94-5.94 1.06 1.06-7 7z"></path></svg>
+            </label>
+
+            <span id="charCount" class="char-count">0 / 280</span>
+        </div>
+
+        <div class="analysis-box">
+            <div class="score-header">
+                <span class="score-title">Viral Probability</span>
+                <span class="score-number" id="scoreVal">0</span>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="scoreBar"></div>
+            </div>
+
+            <div class="feedback-grid" id="feedbackArea">
+                <div class="feedback-item">Start typing to analyze...</div>
+            </div>
+
+            <a href="https://tweethunter.io/?via=javier-fernandez" target="_blank" class="schedule-btn" id="ctaBtn">
+                <svg viewBox="0 0 24 24"><path d="M21.414 11.586l-9-9C12.053 2.222 11.553 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .553.222 1.053.586 1.414l9 9c.78.78 2.048.78 2.828 0l7-7c.78-.78.78-2.047 0-2.828zM7 7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path></svg>
+                Schedule Post
+            </a>
+        </div>
+    </div>
+
+    <div class="preview-pane">
+        <div class="phone-mockup">
+            <div class="tweet-header">
+                <div class="avatar">
+                    <img src="https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png" id="pfp">
+                </div>
+                <div class="user-meta">
+                    <div class="name-line">
+                        <span class="user-name">You</span>
+                        <svg class="verified-badge" id="previewBadge" viewBox="0 0 24 24"><path fill="currentColor" d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.02-3.01-1.06-4.12-1.1-1.1-2.73-1.53-4.12-1.06C14.17 2.13 12.93 1.25 11.5 1.25c-1.43 0-2.67.88-3.34 2.19-1.39-.46-3.01-.02-4.12 1.06-1.1 1.1-1.53 2.73-1.06 4.12C1.63 9.33.75 10.57.75 12c0 1.43.88 2.67 2.19 3.34-.46 1.39-.02 3.01 1.06 4.12 1.1 1.1 2.73 1.53 4.12 1.06 1.33 1.31 2.57 2.19 4 2.19 1.43 0 2.67-.88 3.34-2.19 1.39.46 3.01.02 4.12-1.06 1.1-1.1 1.53-2.73 1.06-4.12 1.31-1.33 2.19-2.57 2.19-4zm-11.25 6.75L6.5 14.25l1.06-1.06 2.44 2.44 5.94-5.94 1.06 1.06-7 7z"></path></svg>
+                    </div>
+                    <span class="user-handle">@username</span>
+                </div>
+            </div>
+
+            <div class="tweet-body" id="previewText"></div>
+
+            <div class="media-container" id="mediaPreview">
+                </div>
+
+            <div class="tweet-footer">
+                <span id="dateDisplay"></span> · <b>0</b> Views
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- ELEMENTS ---
+    const editor = document.getElementById('editor');
+    const previewText = document.getElementById('previewText');
+    const mediaPreview = document.getElementById('mediaPreview');
+    const charCount = document.getElementById('charCount');
+    const scoreVal = document.getElementById('scoreVal');
+    const scoreBar = document.getElementById('scoreBar');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const fontMenu = document.getElementById('fontMenu');
+
+    // --- STATE ---
+    let state = {
+        hasMedia: false,
+        isVideo: false,
+        isPremium: false,
+        text: ""
+    };
+
+    // --- INIT ---
+    document.getElementById('dateDisplay').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + " · " + new Date().toLocaleDateString();
+
+    // --- EVENT LISTENERS ---
+    editor.addEventListener('input', () => {
+        state.text = editor.value;
+        previewText.innerText = state.text;
+
+        // Character Count Logic
+        const len = state.text.length;
+        charCount.innerText = `${len} / 280`;
+        charCount.className = 'char-count ' + (len > 260 ? (len > 280 ? 'danger' : 'warning') : '');
+
+        runAnalysis();
+    });
+
+    document.getElementById('checkPremium').addEventListener('change', (e) => {
+        state.isPremium = e.target.checked;
+        document.getElementById('premiumIcon').style.fill = state.isPremium ? '#1d9bf0' : '#1d9bf0';
+        document.getElementById('premiumIcon').style.opacity = state.isPremium ? '1' : '0.5';
+        document.getElementById('previewBadge').style.display = state.isPremium ? 'block' : 'none';
+        runAnalysis();
+    });
+
+    // --- MEDIA HANDLER ---
+    document.getElementById('fileUpload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        mediaPreview.style.display = 'block';
+        mediaPreview.innerHTML = ''; // Clear prev
+
+        const url = URL.createObjectURL(file);
+        state.hasMedia = true;
+
+        if (file.type.startsWith('video')) {
+            state.isVideo = true;
+            const vid = document.createElement('video');
+            vid.src = url;
+            vid.controls = true;
+            mediaPreview.appendChild(vid);
+        } else {
+            state.isVideo = false;
+            const img = document.createElement('img');
+            img.src = url;
+            mediaPreview.appendChild(img);
+        }
+        runAnalysis();
+    });
+
+    // --- ANALYSIS ENGINE ---
+    function runAnalysis() {
+        let score = 50;
+        let tips = [];
+
+        // 1. Text Analysis
+        if (state.text.length < 10 && !state.hasMedia) {
+            tips.push({icon: "⚠️", text: "Too short to rank"});
+            score -= 20;
+        }
+        if (state.text.includes("http")) {
+            tips.push({icon: "⛔", text: "Link Penalty (-90% Reach)"});
+            score *= 0.1;
+        }
+
+        // 2. Media Weights
+        if (state.hasMedia) {
+            if (state.isVideo) {
+                score += 50;
+                tips.push({icon: "📹", text: "Video Boost (+4.5x)", active: true});
+            } else {
+                score += 20;
+                tips.push({icon: "🖼️", text: "Image Boost (+2.0x)", active: true});
+            }
+        }
+
+        // 3. Premium
+        if (state.isPremium) {
+            score *= 1.2;
+            tips.push({icon: "🔹", text: "Verified Boost Active", active: true});
+        }
+
+        // 4. Formatting
+        if (/[𝐚-𝐳]/.test(state.text)) {
+             score += 10;
+             tips.push({icon: "✨", text: "Formatting grabs attention", active: true});
+        }
+
+        // RENDER RESULTS
+        const finalScore = Math.min(Math.round(score), 100);
+
+        // Animate Numbers
+        scoreVal.innerText = finalScore;
+
+        // Animate Bar color and width
+        scoreBar.style.width = `${finalScore}%`;
+        if (finalScore < 40) scoreBar.style.backgroundColor = "#f91880";
+        else if (finalScore < 70) scoreBar.style.backgroundColor = "#ffd400";
+        else scoreBar.style.backgroundColor = "#00ba7c";
+
+        // Render Tips
+        feedbackArea.innerHTML = tips.map(t => `
+            <div class="feedback-item ${t.active ? 'active' : ''}">
+                <div class="feedback-icon">${t.icon}</div>
+                <div>${t.text}</div>
+            </div>
+        `).join('') || '<div class="feedback-item">Good text balance.</div>';
+    }
+
+    // --- FONT TOOLS ---
+    function toggleFonts() {
+        fontMenu.classList.toggle('show');
+    }
+
+    function applyFont(type) {
+        const maps = {
+            bold: {"a":"𝐚","b":"𝐛","c":"𝐜","d":"𝐝","e":"𝐞","f":"𝐟","g":"𝐠","h":"𝐡","i":"𝐢","j":"𝐣","k":"𝐤","l":"𝐥","m":"𝐦","n":"𝐧","o":"𝐨","p":"𝐩","q":"𝐪","r":"𝐫","s":"𝐬","t":"𝐭","u":"𝐮","v":"𝐯","w":"𝐰","x":"𝐱","y":"𝐲","z":"𝐳","A":"𝐀","B":"𝐁","C":"𝐂","D":"𝐃","E":"𝐄","F":"𝐅","G":"𝐆","H":"𝐇","I":"𝐈","J":"𝐉","K":"𝐊","L":"𝐋","M":"𝐌","N":"𝐍","O":"𝐎","P":"𝐏","Q":"𝐐","R":"𝐑","S":"𝐒","T":"𝐓","U":"𝐔","V":"𝐕","W":"𝐖","X":"𝐗","Y":"𝐘","Z":"𝐙"},
+            italic: {"a":"𝑎","b":"𝑏","c":"𝑐","d":"𝑑","e":"𝑒","f":"𝑓","g":"𝑔","h":"ℎ","i":"𝑖","j":"𝑗","k":"𝑘","l":"𝑙","m":"𝑚","n":"𝑛","o":"𝑜","p":"𝑝","q":"𝑞","r":"𝑟","s":"𝑠","t":"𝑡","u":"𝑢","v":"𝑣","w":"𝑤","x":"𝑥","y":"𝑦","z":"𝑧","A":"𝐴","B":"𝐵","C":"𝐶","D":"𝐷","E":"𝐸","F":"𝐹","G":"𝐺","H":"𝐻","I":"𝐼","J":"𝐽","K":"𝐾","L":"𝐿","M":"𝑀","N":"𝑁","O":"𝑂","P":"𝑃","Q":"𝑄","R":"𝑅","S":"𝑆","T":"𝑇","U":"𝑈","V":"𝑉","W":"𝑊","X":"𝑋","Y":"𝑌","Z":"𝑍"},
+            mono: {"a":"𝚊","b":"𝚋","c":"𝚌","d":"𝚍","e":"𝚎","f":"𝚏","g":"𝚐","h":"𝚑","i":"𝚒","j":"𝚓","k":"𝚔","l":"𝚕","m":"𝚖","n":"𝚗","o":"𝚘","p":"𝚙","q":"𝚚","r":"𝚛","s":"𝚜","t":"𝚝","u":"𝚞","v":"𝚟","w":"𝚠","x":"𝚡","y":"𝚢","z":"𝚣","A":"𝙰","B":"𝙱","C":"𝙲","D":"𝙳","E":"𝙴","F":"𝙵","G":"𝙶","H":"𝙷","I":"𝙸","J":"𝙹","K":"𝙺","L":"𝙻","M":"𝙼","N":"𝙽","O":"𝙾","P":"𝙿","Q":"𝚀","R":"𝚁","S":"𝚂","T":"𝚃","U":"𝚄","V":"𝚅","W":"𝚆","X":"𝚇","Y":"𝚈","Z":"𝚉"}
+        };
+
+        const textarea = document.getElementById('editor');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selected = textarea.value.substring(start, end);
+
+        if (!selected) return;
+
+        const converted = selected.split('').map(c => maps[type][c] || c).join('');
+        textarea.value = textarea.value.substring(0, start) + converted + textarea.value.substring(end);
+
+        // Trigger update
+        state.text = textarea.value;
+        previewText.innerText = state.text;
+        runAnalysis();
+
+        fontMenu.classList.remove('show');
+    }
+</script>
+
+</body>
+</html>
+Application Features

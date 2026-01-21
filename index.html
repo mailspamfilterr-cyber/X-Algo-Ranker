@@ -54,96 +54,61 @@
             padding: 10px;
             text-align: center;
         }
+        #ad a {
+            color: #1da1f2;
+            text-decoration: none;
+        }
+        #ad a:hover {
+            text-decoration: underline;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>X Ranker: Will Your Post Rank High?</h1>
-    <p>Enter your X post text below and get a ranking score inspired by X's open-source algorithm. Get actionable recommendations to improve your post.</p>
+    <p>Enter your X post text below and get a real AI-powered ranking score using Grok, based on X's open-source algorithm from https://github.com/xai-org/x-algorithm.</p>
     <textarea id="postText" placeholder="Type your X post here..."></textarea>
     <button onclick="analyzePost()">Analyze Ranking Potential</button>
+    <div id="loading">Analyzing... Please wait.</div>
     <div id="result">Score: 0/100</div>
     <div id="recommendations"></div>
-    <!-- Monetization: Ad placeholder -->
-    <div id="ad">Advertisement - Integrate Google AdSense here for monetization.</div>
+    <!-- Monetization: Affiliate link to TweetHunter -->
+    <div id="ad">Sponsored: Boost your X growth with <a href="https://tweethunter.io/?via=javier-fernandez" target="_blank">TweetHunter</a> - the tool I use for scheduling, analytics, and more!</div>
     
     <script>
-        function analyzePost() {
-            const text = document.getElementById('postText').value.toLowerCase();
-            let score = 0;
-            const recommendations = [];
-            
-            // Length: Optimal 50-280 chars
-            const length = text.length;
-            if (length > 50 && length <= 280) {
-                score += Math.min(20, ((length - 50) / 230) * 20 + 5); // Bonus for mid-range
-            } else if (length > 0) {
-                score += 5;
-                recommendations.push("Keep your post between 50-280 characters for best engagement.");
+        async function analyzePost() {
+            const text = document.getElementById('postText').value;
+            if (!text) {
+                alert('Please enter some text.');
+                return;
             }
             
-            // Questions: Encourage replies
-            if (text.includes('?')) {
-                score += 20;
-            } else {
-                recommendations.push("Add a question to encourage replies and boost engagement.");
-            }
-            
-            // Emojis: Visual appeal
-            if (/[\u1F004-\u1FAFF]/.test(text)) {
-                score += 10;
-            } else {
-                recommendations.push("Include emojis to make your post more visually appealing.");
-            }
-            
-            // Urgency words
-            const urgencyWords = ['breaking', 'now', 'urgent', 'alert', 'exclusive', 'limited', 'hurry'];
-            if (urgencyWords.some(word => text.includes(word))) {
-                score += 15;
-            } else {
-                recommendations.push("Use urgency words like 'now' or 'breaking' to increase shares.");
-            }
-            
-            // Call to action
-            const ctaPhrases = ['what do you think', 'reply', 'tell me', 'agree?', 'share', 'like', 'retweet'];
-            if (ctaPhrases.some(phrase => text.includes(phrase))) {
-                score += 20;
-            } else {
-                recommendations.push("Add a call to action like 'What do you think?' to prompt interactions.");
-            }
-            
-            // Controversy/Debate words
-            const controWords = ['debate', 'vs', 'why', 'wrong', 'controversial', 'shocking', 'unbelievable'];
-            if (controWords.some(word => text.includes(word))) {
-                score += 10;
-            } else {
-                recommendations.push("Spark debate with words like 'vs' or 'why' to drive discussions.");
-            }
-            
-            // Hashtags: Discoverability
-            if (text.includes('#')) {
-                score += 5;
-            } else {
-                recommendations.push("Add relevant hashtags to increase visibility.");
-            }
-            
-            // Mentions: Tag others
-            if (text.includes('@')) {
-                score += 10;
-            } else {
-                recommendations.push("Mention users with @ to engage them directly.");
-            }
-            
-            // Cap score at 100
-            score = Math.min(100, Math.round(score));
-            
-            document.getElementById('result').innerText = `Score: ${score}/100`;
-            
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            const resultDiv = document.getElementById('result');
             const recDiv = document.getElementById('recommendations');
-            recDiv.innerHTML = '<h3>Recommendations:</h3>';
-            if (recommendations.length === 0) {
-                recDiv.innerHTML += '<p>Your post is optimized! Great job.</p>';
-            } else {
-                recDiv.innerHTML += '<ul>' + recommendations.map(rec => `<li>${rec}</li>`).join('') + '</ul>';
+            resultDiv.innerText = 'Score: Calculating...';
+            recDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/.netlify/functions/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ post: text })
+                });
+                const data = await response.json();
+                
+                resultDiv.innerText = `Score: ${data.score}/100`;
+                recDiv.innerHTML = '<h3>Recommendations:</h3><ul>' + data.recommendations.map(rec => `<li>${rec}</li>`).join('') + '</ul>';
+            } catch (error) {
+                resultDiv.innerText = 'Error analyzing post.';
+                console.error(error);
+            } finally {
+                loading.style.display = 'none';
             }
         }
     </script>
